@@ -1,5 +1,5 @@
 import GAinspector
-import numpy as np
+# import numpy as np
 from utils import *
 
 def randomGenome(length):
@@ -7,7 +7,8 @@ def randomGenome(length):
     :param length:
     :return: string, random binary digit
     """
-    return np.array2string(np.random.randint(2, size=length))
+    return "".join(map(str,  [random.randint(0,1) for i in range(length)])) 
+   
 
 
 def makePopulation(size, length):
@@ -24,7 +25,7 @@ def fitness(genome):
     :param genome: 
     :return: the fitness value of a genome
     """
-    return np.sum(np.fromstring(genome, dtype=int))
+    return sum(list(map(int, genome)))
 
 
 def evaluateFitness(population):
@@ -34,7 +35,7 @@ def evaluateFitness(population):
     best individual in the population.
     """
     fitnesses = [fitness(x) for x in population]
-    return (np.average(fitness), np.max(fitness))
+    return (Average(fitnesses), max(fitnesses))
 
 
 def crossover(genome1, genome2):
@@ -43,7 +44,7 @@ def crossover(genome1, genome2):
     :param genome2:
     :return: two new genomes produced by crossing over the given genomes at a random crossover point.
     """
-    split = np.random.randint(1, len(genome1) - 1)
+    split = random.randint(1, len(genome1) - 1)
     child1 = genome1[:split] + genome2[split:]
     child2 = genome2[:split] + genome1[split:]
     return (child1, child2)
@@ -55,13 +56,14 @@ def mutate(genome, mutationRate):
     :param mutationRate:
     :return: a new mutated version of the given genome.
     """
-    splited = np.fromstring(genome, dtype=int))
+    splited = list(map(int, genome))
     for chrom in splited:
-        if np.random.random() < mutationRate:
+        if random.random() <= mutationRate:
             if chrom == 0:
                 chrom = 1
             else:
                 chrom = 0
+    return "".join(str(x) for x in splited)
 
 
 def selectPair(population):
@@ -71,9 +73,9 @@ def selectPair(population):
     This function should use weightedChoice, which we wrote in class, as a helper function.
     """
     pop_fitness = [fitness(x) for x in population]
-    individual1 = utils.weightedChoice(genomes, pop_fitness)
-    individual2 = utils.weightedChoice(genomes, pop_fitness)
-   return (individual1, individual2)
+    individual1 = weightedChoice(population, pop_fitness)
+    individual2 = weightedChoice(population, pop_fitness)
+    return (individual1, individual2)
 
 
 def runGA(populationSize, crossoverRate, mutationRate, logFile=""):
@@ -97,12 +99,13 @@ def runGA(populationSize, crossoverRate, mutationRate, logFile=""):
 if __name__ == '__main__':
     #Testing Code
     print("Test Suite")
-    #GAinspector.test(randomGenome)
-    #GAinspector.test(makePopulation)
-    #GAinspector.test(fitness)
-    #GAinspector.test(evaluateFitness)
-    #GAinspector.test(crossover)
-    #GAinspector.test(mutate)
-    #GAinspector.test(selectPair)
-
+    # GAinspector.test(randomGenome)
+    # GAinspector.test(makePopulation)
+    # GAinspector.test(fitness)
+    # GAinspector.test(evaluateFitness)
+    # GAinspector.test(crossover)
+    # GAinspector.test(mutate)
+    # GAinspector.test(selectPair)
     #runGA(100, 0.7, 0.001, "run1.txt")
+    for i in range(10):
+        GAinspector.test(crossover)
