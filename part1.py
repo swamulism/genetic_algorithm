@@ -8,7 +8,6 @@ def randomGenome(length):
     :return: string, random binary digit
     """
     return "".join(map(str,  [random.randint(0,1) for i in range(length)])) 
-   
 
 
 def makePopulation(size, length):
@@ -56,14 +55,16 @@ def mutate(genome, mutationRate):
     :param mutationRate:
     :return: a new mutated version of the given genome.
     """
-    splited = list(map(int, genome))
-    for chrom in splited:
+    tmp = ""
+    for chrom in genome:
         if random.random() <= mutationRate:
-            if chrom == 0:
-                chrom = 1
+            if chrom == "0":
+                tmp += "1"
             else:
-                chrom = 0
-    return "".join(str(x) for x in splited)
+                tmp += "0"
+        else:
+            tmp += chrom
+    return tmp
 
 
 def selectPair(population):
@@ -89,16 +90,26 @@ def runGA(populationSize, crossoverRate, mutationRate, logFile=""):
     ones was found.is the main GA program, which takes the population size, crossover rate (pc), 
     and mutation rate (pm) as parameters. 
     """
-    # population = makePopulation(populationSize, 10)
+    genome_length = 20
+    generations = 50
+    population = makePopulation(populationSize, genome_length)
+
+    for i in range(generations):
+        gnome1, gnome2 = selectPair(population)
+        avg_fitness, highest_fitness = evaluateFitness(population)
+        for j in range(population):
+            if random.random() <= crossoverRate:
+                new_pop += crossover(genome1, gnome2):
+            else:
+                new_pop += genome1, genome2
+
+
     raiseNotDefined()
 
 
-
-
-
 if __name__ == '__main__':
-    #Testing Code
-    print("Test Suite")
+    # Testing Code
+    # print("Test Suite")
     # GAinspector.test(randomGenome)
     # GAinspector.test(makePopulation)
     # GAinspector.test(fitness)
@@ -106,6 +117,4 @@ if __name__ == '__main__':
     # GAinspector.test(crossover)
     # GAinspector.test(mutate)
     # GAinspector.test(selectPair)
-    #runGA(100, 0.7, 0.001, "run1.txt")
-    for i in range(10):
-        GAinspector.test(crossover)
+    runGA(100, 0.7, 0.001, "run1.txt")
