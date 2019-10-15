@@ -20,10 +20,7 @@ def randomGenome(length):
     :param length:
     :return: string, random integers between 0 and 6 inclusive
     """
-
-    """Your Code Here"""
-    raiseNotDefined()
-
+    return "".join(map(str,  [random.randint(0,6) for i in range(length)])) 
 
 
 def makePopulation(size, length):
@@ -32,10 +29,8 @@ def makePopulation(size, length):
     :param length - of genome
     :return: list of length size containing genomes of length length
     """
+    return [randomGenome(length) for _ in range(size)]
 
-
-    """Your Code Here"""
-    raiseNotDefined()
 
 def fitness(genome, steps=200, init=0.50):
     """
@@ -70,7 +65,8 @@ def evaluateFitness(population):
     :return: a pair of values: the average fitness of the population as a whole and the fitness of the best individual
     in the population.
     """
-    raiseNotDefined()
+    fitnesses = [fitness(x) for x in population]
+    return (Average(fitnesses), max(fitnesses))
 
 
 def crossover(genome1, genome2):
@@ -79,7 +75,10 @@ def crossover(genome1, genome2):
     :param genome2:
     :return: two new genomes produced by crossing over the given genomes at a random crossover point.
     """
-    raiseNotDefined()
+    split = random.randint(1, len(genome1) - 1)
+    child1 = genome1[:split] + genome2[split:]
+    child2 = genome2[:split] + genome1[split:]
+    return (child1, child2)
 
 
 def mutate(genome, mutationRate):
@@ -88,7 +87,16 @@ def mutate(genome, mutationRate):
     :param mutationRate:
     :return: a new mutated version of the given genome.
     """
-    raiseNotDefined()
+    tmp = ""
+    for chrom in genome:
+        if random.random() <= mutationRate:
+            randmut = random.randint(0,6)
+            while randmut == chrom:
+                randmut = random.randint(0,6)
+            tmp += str(randmut)
+        else:
+            tmp += chrom
+    return tmp
 
 def selectPair(population):
     """
