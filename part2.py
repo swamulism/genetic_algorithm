@@ -35,39 +35,41 @@ def fitness(genome, steps=200, init=0.50):
     :param init: amount of cans
     :return:
     """
-    if type(genome) is not str or len(genome) != 243:
-        raise Exception("strategy is not a string of length 243")
-    for char in genome:
-        if char not in "0123456":
-            raise Exception("strategy contains a bad character: '%s'" % char)
-    if type(steps) is not int or steps < 1:
-        raise Exception("steps must be an integer > 0")
-    if type(init) is str:
-        # init is a config file
-        rw.load(init)
-    elif type(init) in [int, float] and 0 <= init <= 1:
-        # init is a can density
-        rw.goto(0, 0)
-        rw.distributeCans(init)
-    else:
-        raise Exception("invalid initial configuration")
+    scores = []
+    for _ in range(25):
+        if type(genome) is not str or len(genome) != 243:
+            raise Exception("strategy is not a string of length 243")
+        for char in genome:
+            if char not in "0123456":
+                raise Exception("strategy contains a bad character: '%s'" % char)
+        if type(steps) is not int or steps < 1:
+            raise Exception("steps must be an integer > 0")
+        if type(init) is str:
+            # init is a config file
+            rw.load(init)
+        elif type(init) in [int, float] and 0 <= init <= 1:
+            # init is a can density
+            rw.goto(0, 0)
+            rw.distributeCans(init)
+        else:
+            raise Exception("invalid initial configuration")
 
-    score = 0
-    for i in range(steps):
-        p = rw.getPerceptCode()
-        action = POSSIBLE_ACTIONS[int(genome[p])]
-        score += rw.performAction(action)
+        score = 0
+        for _ in range(steps):
+            p = rw.getPerceptCode()
+            action = POSSIBLE_ACTIONS[int(genome[p])]
+            score += rw.performAction(action)
+        scores.append(score)
 
-    return score
+    return Average(scores)
 
 
-def evaluateFitness(population):
+def evaluateFitness(fitnesses):
     """
     :param population:
     :return: a pair of values: the average fitness of the population as a whole and the fitness of the best individual
     in the population.
     """
-    fitnesses = [fitness(x) for x in population]
     return (Average(fitnesses), max(fitnesses))
 
 
@@ -93,7 +95,7 @@ def mutate(genome, mutationRate):
     for chrom in genome:
         if random.random() <= mutationRate:
             randmut = random.randint(0,6)
-            while randmut == chrom:
+            while str(randmut) == chrom:
                 randmut = random.randint(0,6)
             tmp += str(randmut)
         else:
@@ -108,7 +110,20 @@ def selectPair(population):
     :return: two genomes from the given population using fitness-proportionate selection.
     This function should use RankSelection,
     """
-    weights = [i for i in range(1, len(population) + 1)]
+    weights = range(1, len(population) + 1)
+    individual1 = weightedChoice(population, weights)
+    individual2 = weightedChoice(population, weights)
+    return (individual1, individual2)
+
+
+# population must be sorted
+def selectPairByWeight(population, weights):
+    """
+    :param population:
+    :return: two genomes from the given population using fitness-proportionate selection.
+    This function should use RankSelection,
+    """
+    minimum = min(weights)
     individual1 = weightedChoice(population, weights)
     individual2 = weightedChoice(population, weights)
     return (individual1, individual2)
@@ -132,14 +147,14 @@ def runGA(populationSize, crossoverRate, mutationRate, logFile=""):
         f = open(logFile, "w+")
     print("Poplation size:", populationSize)
 
-    for i in range(generations):
-        avg_fitness, highest_fitness = evaluateFitness(population)
-        _, population = sortByFitness(population)
+    for i in range(generations+1):
+        weights, population = sortByFitness(population)
+        avg_fitness, highest_fitness = evaluateFitness(weights)
         
         if i % 10 == 0:
             if logFile != "":
-                f.write("{} {:.02f} {} {}\n".format(i, avg_fitness, highest_fitness, population[0]))
-            print("Generation {}: average fitness {:.02f}, best fitness {}".format(i, avg_fitness, highest_fitness))
+                f.write("{} {:.02f} {:.02f} {}\n".format(i, avg_fitness, highest_fitness, population[0]))
+            print("Generation {}: average fitness {:.02f}, best fitness {:.02f}".format(i, avg_fitness, highest_fitness))
             
         new_pop = []
         while len(new_pop) < populationSize:
@@ -159,4 +174,6 @@ def test_FitnessFunction():
     print("Fitness for StrategyM : {0}".format(f))
 
 
-runGA(100, 0.7, 1, "")
+# runGA(100, 0.7, 1, "")
+
+runGA(100, 0.5, 0.005, "robby_run1.txt")
