@@ -136,4 +136,4 @@ if __name__ == '__main__':
             ls.append(tmp)
     print(Average(ls), min(ls), max(ls))
     # runGA(100, 0.7, 0.001, "run.txt")
-    #26.895833333333332 2 49
+ 
