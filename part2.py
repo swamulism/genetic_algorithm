@@ -16,7 +16,7 @@ def randomGenome(length):
     :param length:
     :return: string, random integers between 0 and 6 inclusive
     """
-    return "".join(map(str,  [random.randint(0,6) for i in range(length)])) 
+    return "".join(map(str, [random.randint(0,6) for i in range(length)])) 
 
 
 def makePopulation(size, length):
@@ -125,10 +125,11 @@ def runGA(populationSize, crossoverRate, mutationRate, logFile=""):
     Is the main GA program, which takes the population size, crossover rate (pc), and mutation rate (pm) as parameters. 
     """
     genome_length = 243
-    generations = 1300
+    generations = 300
     population = makePopulation(populationSize, genome_length)
 
-    f = open(logFile, "w+")
+    if logFile != "":
+        f = open(logFile, "w+")
     print("Poplation size:", populationSize)
 
     for i in range(generations):
@@ -136,7 +137,8 @@ def runGA(populationSize, crossoverRate, mutationRate, logFile=""):
         _, population = sortByFitness(population)
         
         if i % 10 == 0:
-            f.write("{} {:.02f} {} {}\n".format(i, avg_fitness, highest_fitness, population[0]))
+            if logFile != "":
+                f.write("{} {:.02f} {} {}\n".format(i, avg_fitness, highest_fitness, population[0]))
             print("Generation {}: average fitness {:.02f}, best fitness {}".format(i, avg_fitness, highest_fitness))
             
         new_pop = []
@@ -147,8 +149,9 @@ def runGA(populationSize, crossoverRate, mutationRate, logFile=""):
             new_pop += [mutate(genome1, mutationRate), mutate(genome2, mutationRate)]
         population = new_pop
 
-    f.close()
-    print("Results saved in file", logFile)
+    if logFile != "":
+        f.close()
+        print("Results saved in file", logFile)
 
 
 def test_FitnessFunction():
@@ -156,7 +159,4 @@ def test_FitnessFunction():
     print("Fitness for StrategyM : {0}".format(f))
 
 
-
-#test_FitnessFunction()
-
-runGA(100, 1.0, 0.05, "robby_run1.txt")
+runGA(100, 0.7, 1, "")
