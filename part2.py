@@ -127,7 +127,7 @@ def runGA(populationSize, crossoverRate, mutationRate, logFile=""):
     Is the main GA program, which takes the population size, crossover rate (pc), and mutation rate (pm) as parameters. 
     """
     genome_length = 243
-    generations = 3000
+    generations = 300
     population = makePopulation(populationSize, genome_length)
 
     if logFile != "":
@@ -140,7 +140,7 @@ def runGA(populationSize, crossoverRate, mutationRate, logFile=""):
         
         if i % 10 == 0:
             if logFile != "":
-                f.write("{} {:.02f} {:.02f} {}\n".format(i, avg_fitness, highest_fitness, population[0]))
+                f.write("{} {:.02f} {:.02f} {}\n".format(i, avg_fitness, highest_fitness, population[-1]))
             print("Generation {}: average fitness {:.02f}, best fitness {:.02f}".format(i, avg_fitness, highest_fitness))
             
         new_pop = []
@@ -161,6 +161,4 @@ def test_FitnessFunction():
     print("Fitness for StrategyM : {0}".format(f))
 
 
-# runGA(100, 0.7, 1, "")
-
-runGA(100, 0.5, 0.005, "robby_run2.txt")
+# runGA(100, 0.7, 0.005, "robby_run1.txt")
