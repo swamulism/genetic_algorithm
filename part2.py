@@ -116,19 +116,6 @@ def selectPair(population):
     return (individual1, individual2)
 
 
-# population must be sorted
-def selectPairByWeight(population, weights):
-    """
-    :param population:
-    :return: two genomes from the given population using fitness-proportionate selection.
-    This function should use RankSelection,
-    """
-    minimum = min(weights)
-    individual1 = weightedChoice(population, weights)
-    individual2 = weightedChoice(population, weights)
-    return (individual1, individual2)
-
-
 def runGA(populationSize, crossoverRate, mutationRate, logFile=""):
     """
     :param populationSize: 
@@ -140,7 +127,7 @@ def runGA(populationSize, crossoverRate, mutationRate, logFile=""):
     Is the main GA program, which takes the population size, crossover rate (pc), and mutation rate (pm) as parameters. 
     """
     genome_length = 243
-    generations = 300
+    generations = 3000
     population = makePopulation(populationSize, genome_length)
 
     if logFile != "":
@@ -176,4 +163,4 @@ def test_FitnessFunction():
 
 # runGA(100, 0.7, 1, "")
 
-runGA(100, 0.5, 0.005, "robby_run1.txt")
+runGA(100, 0.5, 0.005, "robby_run2.txt")

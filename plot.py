@@ -1,11 +1,6 @@
 import matplotlib.pyplot as plt
 import csv
 
-
-# plt.plot( 'x', 'y1', data=df, marker='o', markerfacecolor='blue', markersize=12, color='skyblue', linewidth=4)
-# plt.plot( 'x', 'y2', data=df, marker='', color='olive', linewidth=2)
-# plt.plot( 'x', 'y3', data=df, marker='', color='olive', linewidth=2, linestyle='dashed', label="toto")
-
 # These are the "Tableau 20" colors as RGB.    
 tableau20 = [(31, 119, 180), (174, 199, 232), (255, 127, 14), (255, 187, 120),    
              (44, 160, 44), (152, 223, 138), (214, 39, 40), (255, 152, 150),    
@@ -33,12 +28,17 @@ for i in range(1,51):
         for row in plots:
             x.append(float(row[0]))
             y.append(float(row[1]))
-    ax.plot(x, y, color=get_color(i))
+    ax.plot(x, y, color=get_color(i), marker='.')
 
 # Add title and axes labels
 ax.set_title('Evolution of gene')
 ax.set_xlabel('Generations')
 ax.set_ylabel('Fitness')
+
+# Limit the range of the plot to only where the data is.    
+# Avoid unnecessary whitespace.    
+# plt.ylim(0, 90)    
+# plt.xlim(1968, 2014)   
 
 # Remove borders
 [ax.spines[spine].set_visible(False) for spine in ax.spines]

@@ -91,24 +91,24 @@ def runGA(populationSize, crossoverRate, mutationRate, logFile=""):
     Is the main GA program, which takes the population size, crossover rate (pc), and mutation rate (pm) as parameters. 
     """
     genome_length = 20
-    generations = 50
+    generations = 500
     population = makePopulation(populationSize, genome_length)
 
     if logFile != "":
         f = open(logFile, "w+")
-    print("Poplation size:", populationSize)
-    print("Genome length:", genome_length)
+    # print("Poplation size:", populationSize)
+    # print("Genome length:", genome_length)
 
     for i in range(generations):
         avg_fitness, highest_fitness = evaluateFitness(population)
         if logFile != "":
             f.write("{} {:.02f} {:.02f}\n".format(i, avg_fitness, highest_fitness))
-        print("Generation {}: average fitness {:.02f}, best fitness {:.02f}".format(i, avg_fitness, highest_fitness))
+        # print("Generation {}: average fitness {:.02f}, best fitness {:.02f}".format(i, avg_fitness, highest_fitness))
 
         if highest_fitness == genome_length:
             if logFile != "":
                 f.close()
-            print("Results saved in file", logFile)
+            # print("Results saved in file", logFile)
             print(i)
             return i
             
@@ -132,11 +132,9 @@ if __name__ == '__main__':
     # GAinspector.test(mutate)
     # GAinspector.test(selectPair)
 
-    # ls = []
-    # for i in range(1, 51):
-    #     tmp = runGA(100, 0.7, 0.001, "run{}.txt".format(i))
-    #     if tmp is not None:
-    #         ls.append(tmp)
-    # print(Average(ls), min(ls), max(ls))
-    # runGA(100, 0.7, 0.001, "run.txt")
- 
+    ls = []
+    for i in range(50):
+        tmp = runGA(100, 0.7, 0, "")
+        if tmp is not None:
+            ls.append(tmp)
+    print(Average(ls), min(ls), max(ls))
