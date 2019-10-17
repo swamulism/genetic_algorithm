@@ -17,28 +17,37 @@ def get_color(x):
     return tableau20[x % len(tableau20)]
 
 # Set size of figure
-fig, ax = plt.subplots(figsize=(12, 9))
+fig, ax = plt.subplots(figsize=(12, 8))
 
 # Read in data and set plots
-for i in range(1,51):
-    x = []
-    y = []
-    with open('default_runs/run{}.txt'.format(i),'r') as csvfile:
-        plots = csv.reader(csvfile, delimiter=' ')
-        for row in plots:
-            x.append(float(row[0]))
-            y.append(float(row[1]))
-    ax.plot(x, y, color=get_color(i), marker='.')
+
+mut = [0.1, 0.01, 0.005, 0.001]
+cross = [0.7, 0.5, 0.3]
+
+i = 0
+for m in mut:
+    for c in cross:
+        x = []
+        y = []
+        with open('robby_runs/robby_m{}_c{}.txt'.format(m,c),'r') as csvfile:
+            plots = csv.reader(csvfile, delimiter=' ')
+            for row in plots:
+                x.append(float(row[0]))
+                y.append(float(row[1]))
+        ax.plot(x, y, color=get_color(i - 1), marker='.', label="Mutation rate = {}, Crossover rate = {}".format(m, c))
+        i += 1
 
 # Add title and axes labels
-ax.set_title('Evolution of gene')
-ax.set_xlabel('Generations')
-ax.set_ylabel('Fitness')
+ax.set_title('Combinations of different params on effectivness')
+ax.set_xlabel('Fitness')
+ax.set_ylabel('Generation')
 
 # Limit the range of the plot to only where the data is.    
 # Avoid unnecessary whitespace.    
 # plt.ylim(0, 90)    
 # plt.xlim(1968, 2014)   
+
+plt.legend()
 
 # Remove borders
 [ax.spines[spine].set_visible(False) for spine in ax.spines]
@@ -47,4 +56,4 @@ ax.set_ylabel('Fitness')
 ax.yaxis.grid(color='grey', linestyle='-', linewidth=0.25, alpha=0.5)
 
 # Save to file
-fig.savefig('plot.png')
+fig.savefig('plot2.png')
